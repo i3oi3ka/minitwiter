@@ -24,7 +24,9 @@
         <p class="alert alert-info">На жаль, поки що немає жодних коментарів.</p>
         {% endfor %}
     </ul>
+    {% if user.is_authenticated %}
     <a href="{% url 'create_comment' post.pk %}" class="btn btn-secondary mt-3">Create comment</a>
+    {% endif %}
 </div>
 
 {% endblock %}
