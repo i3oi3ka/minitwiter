@@ -23,3 +23,4 @@ __pycache__/
 # Dependency directories
 venv/
 env/
+mini_twitter/media/
