@@ -1,9 +1,16 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import BadHeaderError, send_mail
 from django.db.models import Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -84,7 +91,7 @@ class ChangeInfo(UpdateView):
     model = User
 
     def form_valid(self, form):
-        form.instance.user = self.request.user # Передаємо користувача
+        form.instance.user = self.request.user  # Передаємо користувача
         return super().form_valid(form)
 
 
@@ -108,3 +115,45 @@ def unsubscribe(request, pk):
     user_follow = get_object_or_404(User, pk=pk)
     request.user.following.remove(user_follow)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def password_reset_request(request):
+    if request.method == "POST":
+        print("post")
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            mail = password_reset_form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=mail)
+            except Exception:
+                user = False
+            if user:
+                subject = 'Запит на скидання пароля'
+                email_template_name = "users/password_reset_msg.html"
+                print(user.email)
+                cont = {
+                    "email": user.email,
+                    "domain": '127.0.0.1:8000',
+                    "site_name": 'Сайт',
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": user,
+                    "token": default_token_generator.make_token(user),
+                    "protokol": 'http',
+                }
+                msg_html = render_to_string(email_template_name, cont)
+                print(cont['uid'], cont['token'])
+                try:
+                    # msg = EmailMessage(subject,
+                    #                    msg_html, to=[user.email])
+                    # msg.send()
+                    # print(msg.connection)
+                    req = send_mail(subject, 'посилання', 'i3oi3ka@ukr.net', [user.email],
+                                    fail_silently=True, html_message=msg_html)
+                    print("листа відправлено ", req)
+                except BadHeaderError:
+                    return HttpResponse('Виявлено недопустимий заголовок')
+                return redirect("password_reset_done")
+            else:
+                messages.error(request, 'користувача не знайдено, напишіть адміністратору')
+                return redirect('password_reset')
+    return render(request=request, template_name='users/password_reset.html')

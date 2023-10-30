@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.non_field_errors %}
+<div class="alert alert-danger mt-2">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-start h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                <form method="post" class="email-form">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-12 form-group">
+                                            <label for="id_new_password1">Новий пароль:</label>
+                                            <input type="password" name="new_password1" autocomplete="new-password"
+                                                   required id="id_new_password1"
+                                                   class="form-control">
+                                            <p>{{ form.new_password1.errors|striptags }}</p>
+                                        </div>
+                                        <div class="col-12 form-group">
+                                            <label for="id_new_password2">Підтвердження нового пароля:</label>
+                                            <input type="password" name="new_password2" autocomplete="new-password"
+                                                   required id="id_new_password2"
+                                                   class="form-control">
+                                            <p>{{ form.new_password2.errors|striptags }}</p>
+                                        </div>
+                                        <div>
+                                            {{ form.non_field_errors }}
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-5">
+                                        <button class="btn btn-outline-info my-2 my-sm-0 me-2" type="submit">Скинути пароль</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+<div class="container">
+
+</div>
