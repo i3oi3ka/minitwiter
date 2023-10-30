@@ -30,7 +30,7 @@ class ChangeUserInfo(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Прізвище'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Імя'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email'}),
-            'phone_number': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
         }
 
 
