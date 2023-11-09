@@ -111,7 +111,7 @@ class PostCreateView(CreateView):
 # def post_detail(request, post_id):
 #     post = get_object_or_404(Post, pk=post_id)
 #     comments = Comment.objects.filter(post__id=post_id)
-#     context = {"post": post, 'count_comments': len(comments)}
+#     context = {"post": post, 'count_comments': len(comments), 'comments': comments}
 #     return render(request, "posts/post_detail.html", context)
 
 class PostDetailView(DetailView):
