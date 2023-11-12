@@ -64,19 +64,19 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         to_return = super().form_valid(form)
         UserProfile.objects.create(user=self.object)
-        login(self.request, self.object)
+        login(self.request, self.object, backend='django.contrib.auth.backends.ModelBackend')
         return to_return
 
 
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(data=request.POST)
+        form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('posts_list')
     else:
-        form = LoginForm()
+        form = LoginForm(request)
     return render(request, 'users/login.html', context={'form': form})
 
 

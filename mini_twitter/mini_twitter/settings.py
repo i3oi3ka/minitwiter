@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #my_app
+    'axes',
     'debug_toolbar',
     'users',
     'posts',
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 INTERNAL_IPS = [
@@ -102,6 +104,14 @@ DATABASES = {
         'PORT': '5432'
     }
 }
+
+AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesStandaloneBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 
 # Password validation
@@ -156,3 +166,7 @@ EMAIL_PORT = '465'
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
+
+AXES_FAILURE_LIMIT = 3  # Кількість невдалих спроб, після якої відбувається блокування
+AXES_COOLOFF_TIME = 0.02  # Час у годинах, протягом якого триває блокування
+
