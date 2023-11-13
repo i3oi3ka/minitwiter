@@ -66,7 +66,7 @@ MIDDLEWARE = [
 
 INTERNAL_IPS = [
     '127.0.0.1',
-    '172.18.0.1'
+    '172.19.0.1'
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -170,3 +170,5 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 AXES_FAILURE_LIMIT = 3  # Кількість невдалих спроб, після якої відбувається блокування
 AXES_COOLOFF_TIME = 0.02  # Час у годинах, протягом якого триває блокування
 
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True

@@ -18,6 +18,15 @@ from .forms import CustomUserCreationForm, LoginForm, ChangeUserInfo, ChangeUser
 from .models import User, UserProfile
 
 
+# перевірка чи запит було здійснено з нашого домену!
+def is_valid_request(request):
+    allowed_origin = "http://localhost"
+    origin = request.headers.get("Origin") or request.headers.get("Referer")
+    if origin.startswith(allowed_origin):
+        return True
+    return False
+
+
 class UserList(ListView):
     model = User
     template_name = 'users/users_list.html'
@@ -62,10 +71,13 @@ class RegisterView(CreateView):
     template_name = 'users/registration.html'
 
     def form_valid(self, form):
-        to_return = super().form_valid(form)
-        UserProfile.objects.create(user=self.object)
-        login(self.request, self.object, backend='django.contrib.auth.backends.ModelBackend')
-        return to_return
+        if is_valid_request(self.request):
+            to_return = super().form_valid(form)
+            UserProfile.objects.create(user=self.object)
+            login(self.request, self.object, backend='django.contrib.auth.backends.ModelBackend')
+            return to_return
+        else:
+            return HttpResponse("Go to the hell!!!")
 
 
 def login_view(request):

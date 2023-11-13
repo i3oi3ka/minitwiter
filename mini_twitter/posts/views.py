@@ -1,6 +1,6 @@
 from comment.models import Comment
 from django.db.models import Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.views.generic.edit import DeleteView
@@ -20,12 +20,20 @@ from .models import Post
 #             comment_count[str(post.pk)] = Comment.objects.filter(post__id=post.pk).count()
 #     return render(request, 'posts/posts_list.html', {'posts': posts, 'comment_count': comment_count})
 
+# перевірка чи запит було здійснено з нашого домену!
+def is_valid_request(request):
+    allowed_origin = "http://localhost"
+    origin = request.headers.get("Origin") or request.headers.get("Referer")
+    if origin.startswith(allowed_origin):
+        return True
+    return False
+
 
 class PostListView(ListView):
     model = Post
     template_name = 'posts/posts_list.html'
     context_object_name = 'posts'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         if self.kwargs.get('folder'):
@@ -46,6 +54,7 @@ class PostListView(ListView):
             context['folder'] = self.kwargs['folder']
         else:
             context['folder'] = 'all'
+
         return context
 
 
@@ -104,8 +113,11 @@ class PostCreateView(CreateView):
     template_name = 'posts/create_post.html'
 
     def form_valid(self, form):
-        form.instance.user = self.request.user  # Передаємо користувача
-        return super().form_valid(form)
+        if is_valid_request(self.request):
+            form.instance.user = self.request.user  # Передаємо користувача
+            return super().form_valid(form)
+        else:
+            return HttpResponse(f"Go to Hell")
 
 
 # def post_detail(request, post_id):
