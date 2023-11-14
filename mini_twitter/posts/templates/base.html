@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+                                                        script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net;
+                                                        style-src 'self' 'unsafe-inline' cdn.jsdelivr.net;
+                                                        img-src 'self' data: localhost;"
+                                                        report-to="csp-endpoint">
+    <title>Mini Twitter</title>
+
+    <!-- Add Bootstrap CSS link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static '/js/bootstrap.min.js' %}"></script>
+
+
+    <style>
+        .unread {
+            background-color: #808080; /* Змініть колір фону на ваш смак */
+            font-weight: bold; /* Змініть стиль шрифту на ваш смак */
+            }
+        /* You can still use custom CSS styles here if needed */
+    </style>
+</head>
+<body>
+<header class="bg-primary text-white py-4">
+    <div class="container">
+        <h1 class="display-3">Mini Twitter</h1>
+        <nav class="d-flex justify-content-between align-items-center">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'posts_list' %}"> Усі пости</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'users_list' %}">Користувачі</a>
+                </li>
+                <!-- Add "Create Post" button here -->
+                <a href="{% url 'create_post' %}" class="btn btn-success">Створити пост</a>
+            </ul>
+            <div class="ms-auto">
+                    <span class="me-3 text-white">Вітаю, <a href="{% url 'user_detail' user.pk %}"
+                                                            class="btn btn-outline-info my-2 my-sm-0">{{ user.username }}</a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-info my-2 my-sm-0">Вийти</a>
+                    </span>
+            </div>
+            {% else %}
+            </ul>
+            <div class="ms-auto">
+                <span class="me-3 text-white">Вітаю
+                    <a href="{% url 'login' %}" class="btn btn-outline-info my-2 my-sm-0 me-2">Увійти</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-info my-2 my-sm-0">Зареєструватися</a>
+                </span>
+            </div>
+            {% endif %}
+
+
+        </nav>
+    </div>
+</header>
+
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Ліва бічна панель -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <!-- Відображення логотипу користувача, якщо він авторизований -->
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+
+                        <img src="{{ user.profile.avatar.url }}" alt="Аватар користувача"
+                             class="img-fluid rounded-circle">
+
+                        <h4>{{ user.username }}</h4>
+                    </li>
+                    {% load custom_filters %}
+                    <li class="nav-item">
+                        {% with count=user|unread_message_count %}
+                        {% if count%}
+                        <strong>
+                            <a class="nav-link" href="{% url 'message_list' 'inbox' %}">Повідомлення
+                                ({{count}})</a>
+                        </strong>
+                        {% else %}
+                        <a class="nav-link" href="{% url 'message_list' 'inbox' %}">Повідомлення</a>
+                        {% endif %}
+                        {% endwith %}
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'change_user_info' user.pk %}">Редагувати профіль</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'change_profile' user.profile.pk %}">Редагувати Аватар та
+                            Біо</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'posts_list' 'my' %}">Мої пости</a>
+                    </li>
+
+                    {% endif %}
+                    <!-- Додайте інші пункти меню сюди -->
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Основний блок контенту (посередині) з вирівнюванням по верхньому краю -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 align-items-start">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<footer class="bg-primary text-white text-center py-3">
+    <div class="container">
+        <p>&copy; 2023 Mini Twitter</p>
+    </div>
+</footer>
+
+<!-- Add Bootstrap JS scripts at the end of the body if needed -->
+
+</body>
+</html>
