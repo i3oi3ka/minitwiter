@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="container">
     <h1 class="my-4">Список постів</h1>
@@ -19,11 +20,13 @@
             <p>{{ post.content|truncatechars:100 }}</p>
             <p>Автор: <a href="{% url 'user_detail' post.user.pk %}">{{ post.user.username }}</a></p>
             <p>Дата створення: {{ post.created_at }}</p>
+            {% if user.is_authenticated %}
             <p class="card-text"><a href="{% url 'like' post.pk %}"><img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Bot%C3%B3n_Me_gusta.svg/langru-1024px-Bot%C3%B3n_Me_gusta.svg.png"
+                    src="{% static 'img/like.png' %}"
                     width="20"> </a>
                 <a href="{% url 'liked_post_user' post.pk %}">{{ post.like_count }}</a>
             </p>
+            {% endif %}
             <div class="btn-group">
                 <button type="button" class="btn btn-sm btn-outline-secondary">
                     <a href="{% url 'post_detail' post.pk %}">View</a>

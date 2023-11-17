@@ -29,14 +29,17 @@
             <!-- Додайте інші поля користувача, які вам потрібні -->
         </li>
     </ul>
-    {% if user != user_info %}
-        {% if user_info in user.following.all %}
-            <a href="{% url 'unsubscribe' user_info.pk %}" class="btn btn-secondary mt-3">unsubscribe</a>
-        {% else %}
-            <a href="{% url 'subscribe' user_info.pk %}" class="btn btn-secondary mt-3">subscribe</a>
+    {% if user.is_authenticated %}
+        {% if user != user_info %}
+            {% if user_info in user.following.all %}
+                <a href="{% url 'unsubscribe' user_info.pk %}" class="btn btn-secondary mt-3">unsubscribe</a>
+            {% else %}
+                <a href="{% url 'subscribe' user_info.pk %}" class="btn btn-secondary mt-3">subscribe</a>
+            {% endif %}
         {% endif %}
+        <a href="{% url 'message_create' user_info.pk %}" class="btn btn-secondary mt-3">Create Message</a>
     {% endif %}
     <a href="{% url 'posts_list_user' user_info.pk %}" class="btn btn-secondary mt-3">User posts</a>
-    <a href="{% url 'message_create' user_info.pk %}" class="btn btn-secondary mt-3">Create Message</a>
+
 </div>
 {% endblock %}

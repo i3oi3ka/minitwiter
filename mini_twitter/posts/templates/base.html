@@ -72,10 +72,8 @@
                     <!-- Відображення логотипу користувача, якщо він авторизований -->
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-
                         <img src="{{ user.profile.avatar.url }}" alt="Аватар користувача"
                              class="img-fluid rounded-circle">
-
                         <h4>{{ user.username }}</h4>
                     </li>
                     {% load custom_filters %}

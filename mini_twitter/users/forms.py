@@ -2,6 +2,7 @@ from axes.backends import AxesBackend
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.utils.datetime_safe import date
 
 from .models import User, UserProfile
 
@@ -28,11 +29,20 @@ class LoginForm(AuthenticationForm):
 
 
 class ChangeUserInfo(forms.ModelForm):
+    birthday = forms.DateField(
+        label="Дата народження",
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'ДД.ММ.РРРР'},
+            format='%d.%m.%Y',
+        ),
+        input_formats=['%d.%m.%Y'],
+        initial=date.today()
+    )
+
     class Meta:
         model = User
-        fields = ['birthday', 'first_name', 'last_name', 'email', "phone_number"]
+        fields = ['first_name', 'last_name', 'email', "phone_number"]
         widgets = {
-            'birthday': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Дата народження'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Прізвище'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Імя'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email'}),

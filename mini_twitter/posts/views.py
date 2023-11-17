@@ -22,7 +22,7 @@ from .models import Post
 
 # перевірка чи запит було здійснено з нашого домену!
 def is_valid_request(request):
-    allowed_origin = "http://localhost"
+    allowed_origin = "http://127.0.0.1"
     origin = request.headers.get("Origin") or request.headers.get("Referer")
     if origin.startswith(allowed_origin):
         return True
