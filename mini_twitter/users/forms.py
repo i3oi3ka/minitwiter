@@ -29,24 +29,16 @@ class LoginForm(AuthenticationForm):
 
 
 class ChangeUserInfo(forms.ModelForm):
-    birthday = forms.DateField(
-        label="Дата народження",
-        widget=forms.DateInput(
-            attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'ДД.ММ.РРРР'},
-            format='%d.%m.%Y',
-        ),
-        input_formats=['%d.%m.%Y'],
-        initial=date.today()
-    )
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', "phone_number"]
+        fields = ['first_name', 'last_name', 'email', "phone_number", 'birthday']
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Прізвище'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Імя'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
+            'birthday': forms.TextInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'Номер телефону'}),
         }
 
 

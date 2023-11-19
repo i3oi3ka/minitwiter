@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from users.models import User
+from django_resized import ResizedImageField
 
 
 class Post(models.Model):
@@ -9,7 +10,7 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     like = models.ManyToManyField(User, blank=True, related_name='liked_post')
-    image = models.ImageField(upload_to='posts/image', blank=True, null=True)
+    image = ResizedImageField(size=[600, 400], upload_to='posts/image', blank=True, null=True)
 
     def __str__(self):
         return f'Post: {self.title}, created: {self.created_at}'
