@@ -29,7 +29,8 @@ SECRET_KEY = KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1',
+                 '0.0.0.0']
 
 # Application definition
 
@@ -63,7 +64,7 @@ MIDDLEWARE = [
 
 INTERNAL_IPS = [
     '127.0.0.1',
-    '172.19.0.1'
+    '172.20.0.1'
 ]
 
 AUTH_USER_MODEL = 'users.User'
