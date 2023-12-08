@@ -159,8 +159,8 @@ class PostDeleteView(DeleteView):
 
 # def create_comment(request):
 #     if request.method == 'POST':
-#         form = CommentForm(request.POST, request.FILES)
-#         if form.is_valid():
+#        form = CommentForm(request.POST, request.FILES)
+#        if form.is_valid():
 #             comment = form.save()
 #             return redirect('comment_detail', comment_id=comment.pk)
 #     else:

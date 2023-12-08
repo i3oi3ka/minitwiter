@@ -19,11 +19,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+import consult_gpt.consult
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('message/', include('message.urls')),
     path('comment/', include('comment.urls')),
+    path('chat_with_gpt/', consult_gpt.consult.chat_with_gpt, name='chat_with_gpt'),
+    path('consult/', consult_gpt.consult.consult, name='consult'),
     path('', include('posts.urls')),
 ]
 

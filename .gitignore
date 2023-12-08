@@ -5,7 +5,6 @@ __pycache__/
 # Python cache
 *.pyo
 *.pyd
-__pycache__/
 
 # IDE files
 .idea/
