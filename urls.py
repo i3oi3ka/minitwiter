@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -22,16 +23,21 @@ from django.urls import path, include
 import consult_gpt.consult
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('users/', include('users.urls')),
-    path('message/', include('message.urls')),
-    path('comment/', include('comment.urls')),
-    path('chat_with_gpt/', consult_gpt.consult.chat_with_gpt, name='chat_with_gpt'),
-    path('consult/', consult_gpt.consult.consult, name='consult'),
-    path('', include('posts.urls')),
+    path("admin/", admin.site.urls),
+    path("users/", include("users.urls")),
+    path("message/", include("message.urls")),
+    path("comment/", include("comment.urls")),
+    path(
+        "chat_with_gemini/",
+        consult_gpt.consult.chat_with_gemini,
+        name="chat_with_gemini",
+    ),
+    path("consult/", consult_gpt.consult.consult, name="consult"),
+    path("", include("posts.urls")),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += [path('__debug__', include(debug_toolbar.urls))]
+
+    urlpatterns += [path("__debug__", include(debug_toolbar.urls))]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
