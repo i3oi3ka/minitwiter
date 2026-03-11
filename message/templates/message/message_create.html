@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="mb-3">
+                <a href="{% url 'message_list' 'inbox' %}" class="text-decoration-none text-muted fw-bold">
+                    &larr; Назад до повідомлень
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h3 class="fw-bold mb-0">✉️ Нове повідомлення</h3>
+                    <p class="text-muted small">Напишіть щось особливе для вашого співрозмовника</p>
+                </div>
+
+                <div class="card-body p-4 pt-2">
+                    <form method="post" class="styled-message-form">
+                        {% csrf_token %}
+
+                        <div class="form-group mb-3">
+                            <label class="fw-bold mb-2 text-dark">{{ form.title.label }}</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="fw-bold mb-2 text-dark">{{ form.text.label }}</label>
+                            {{ form.text }}
+                            {% if form.text.errors %}
+                            <div class="text-danger small mt-1">{{ form.text.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                            <a href="{% url 'message_list' 'inbox' %}" class="btn btn-light rounded-pill fw-bold px-4">
+                                Скасувати
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4 shadow-sm">
+                                Надіслати
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Стилізація полів форми для відповідності дизайну */
+    .styled-message-form input[type="text"],
+    .styled-message-form textarea {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        color: #212529;
+        background-color: #f8f9fa;
+        background-clip: padding-box;
+        border: 1px solid #dee2e6;
+        border-radius: 0.75rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .styled-message-form input:focus,
+    .styled-message-form textarea:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    }
+
+    .styled-message-form textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    /* Додатковий стиль для анімації кнопки */
+    .btn-primary:active {
+        transform: scale(0.98);
+    }
+</style>
+{% endblock %}

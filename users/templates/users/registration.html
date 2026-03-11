@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-9 col-xl-8">
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger rounded-4 shadow-sm border-0 mb-4 animate__animated animate__fadeIn">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="row g-0">
+
+                    <div
+                        class="col-lg-5 bg-primary d-none d-lg-flex align-items-center justify-content-center text-white p-5">
+                        <div class="text-center">
+                            <div class="display-1 fw-bold mb-3">MT</div>
+                            <h2 class="fw-bold">Станьте частиною</h2>
+                            <p class="opacity-75">Приєднуйтесь до Mini Twitter та Gemini AI вже сьогодні.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7 bg-white">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="mb-5">
+                                <h2 class="fw-bold text-dark">Створити акаунт</h2>
+                                <p class="text-muted">Заповніть поля нижче, щоб розпочати.</p>
+                            </div>
+
+                            <form method="post" class="styled-register-form" novalidate>
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small text-muted text-uppercase ms-1">Логін</label>
+                                    <div class="input-group custom-input-group">
+                                        <span class="input-group-text border-0 bg-light px-3">👤</span>
+                                        {{ form.username }}
+                                    </div>
+                                    {% if form.username.errors %}
+                                    <div class="text-danger x-small mt-1 ms-1 animate__animated animate__fadeIn">
+                                        {{ form.username.errors|striptags }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small text-muted text-uppercase ms-1">Електронна
+                                        пошта</label>
+                                    <div class="input-group custom-input-group">
+                                        <span class="input-group-text border-0 bg-light px-3">📧</span>
+                                        {{ form.email }}
+                                    </div>
+                                    {% if form.email.errors %}
+                                    <div class="text-danger x-small mt-1 ms-1 animate__animated animate__fadeIn">
+                                        {{ form.email.errors|striptags }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label
+                                        class="form-label fw-bold small text-muted text-uppercase ms-1">Пароль</label>
+                                    <div class="input-group custom-input-group">
+                                        <span class="input-group-text border-0 bg-light px-3">🔒</span>
+                                        {{ form.password1 }}
+                                    </div>
+                                    {% if form.password1.errors %}
+                                    <div class="text-danger x-small mt-1 ms-1 animate__animated animate__fadeIn">
+                                        {{ form.password1.errors|striptags }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-4">
+                                    <label
+                                        class="form-label fw-bold small text-muted text-uppercase ms-1">Підтвердження</label>
+                                    <div class="input-group custom-input-group">
+                                        <span class="input-group-text border-0 bg-light px-3">🔄</span>
+                                        {{ form.password2 }}
+                                    </div>
+                                    {% if form.password2.errors %}
+                                    <div class="text-danger x-small mt-1 ms-1 animate__animated animate__fadeIn">
+                                        {{ form.password2.errors|striptags }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="d-grid mb-4">
+                                    <button type="submit"
+                                        class="btn btn-primary btn-lg rounded-pill fw-bold shadow py-3 transition-all fs-6">
+                                        Зареєструватися
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="text-center mt-4">
+                                <p class="text-muted small">Вже маєте акаунт?
+                                    <a href="{% url 'login' %}"
+                                        class="text-primary fw-bold text-decoration-none border-bottom border-2 border-primary pb-1">Увійти</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-5 mb-5">
+                <p class="text-muted small">&copy; 2026 Mini Twitter Team. Ласкаво просимо! ✨</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Стилізація інпутів Django (pill-style) */
+    .styled-register-form input {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        font-size: 0.95rem;
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 0 50px 50px 0 !important;
+        transition: all 0.3s ease;
+    }
+
+    .styled-register-form input:focus {
+        background-color: #fff;
+        outline: 0;
+        box-shadow: inset 0 0 0 2px #0d6efd;
+    }
+
+    /* Стилізація іконок ліворуч */
+    .custom-input-group .input-group-text {
+        border-radius: 50px 0 0 50px !important;
+        font-size: 1rem;
+    }
+
+    /* Анімація та ефекти кнопок */
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(13, 110, 253, 0.2) !important;
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    /* Шрифт для помилок */
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    /* Адаптація для мобільних */
+    @media (max-width: 991px) {
+        .card-body {
+            padding: 2.5rem 1.5rem !important;
+        }
+    }
+</style>
+{% endblock %}

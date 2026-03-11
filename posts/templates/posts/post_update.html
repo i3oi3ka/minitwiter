@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div
+                    class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
+                    <h3 class="fw-bold mb-0">✏️ Редагування посту</h3>
+                    <a href="{% url 'post_delete' post.pk %}" class="btn btn-outline-danger btn-sm rounded-pill">
+                        Видалити пост
+                    </a>
+                </div>
+
+                <div class="card-body p-4">
+                    {% if user == post.user %}
+                    <form method="post" enctype="multipart/form-data" class="django-styled-form" novalidate>
+                        {% csrf_token %}
+
+                        {{ form.as_p }}
+
+                        <div class="d-flex justify-content-end mt-4 pt-2 border-top gap-2">
+                            <a href="{% url 'post_detail' post.pk %}" class="btn btn-light rounded-pill fw-bold px-4">
+                                Скасувати
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4">
+                                Зберегти зміни
+                            </button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <span class="display-1 d-block mb-3">🚫</span>
+                        <h4 class="fw-bold text-danger">Доступ заборонено</h4>
+                        <p class="text-muted">Ви не можете редагувати цей пост, оскільки не є його автором.</p>
+                        <a href="{% url 'posts_list' %}" class="btn btn-primary rounded-pill px-4">До стрічки</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .django-styled-form label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        color: #495057;
+    }
+
+    .django-styled-form input[type="text"],
+    .django-styled-form input[type="password"],
+    .django-styled-form input[type="email"],
+    .django-styled-form textarea,
+    .django-styled-form select {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.75rem;
+        margin-bottom: 1.25rem;
+        transition: all 0.2s;
+    }
+
+    .django-styled-form input:focus,
+    .django-styled-form textarea:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+
+    .django-styled-form p {
+        margin-bottom: 0;
+    }
+
+    /* Стиль для поточної картинки (якщо Django виводить "Currently: ...") */
+    .django-styled-form a {
+        color: #0d6efd;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}

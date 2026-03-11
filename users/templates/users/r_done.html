@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-9 col-xl-8">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="row g-0">
+
+                    <div
+                        class="col-lg-5 bg-primary d-none d-lg-flex align-items-center justify-content-center text-white p-5">
+                        <div class="text-center">
+                            <div class="display-1 mb-3">✅</div>
+                            <h2 class="fw-bold">Готово!</h2>
+                            <p class="opacity-75">Ваш акаунт знову у безпеці.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7 bg-white">
+                        <div class="card-body p-4 p-md-5 text-center text-lg-start">
+                            <div class="mb-5">
+                                <h2 class="fw-bold text-dark mb-3">Пароль змінено</h2>
+                                <div class="bg-light p-4 rounded-4 border-start border-primary border-4 shadow-sm">
+                                    <p class="fs-5 mb-0 text-secondary">
+                                        Ви успішно встановили новий пароль. Тепер ви можете використовувати його для
+                                        входу в систему.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <a href="{% url 'login' %}"
+                                    class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3 transition-all fs-5">
+                                    Увійти в акаунт
+                                </a>
+                            </div>
+
+                            <div class="text-center text-lg-start mt-4">
+                                <p class="text-muted small">
+                                    Якщо ви не змінювали пароль, негайно
+                                    <a href="#" class="text-primary text-decoration-none fw-bold">зверніться до
+                                        підтримки</a>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 mb-5">
+                <p class="text-muted small">&copy; 2026 Mini Twitter Security. Раді бачити вас знову! ✨</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Плавні ефекти для кнопок */
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(13, 110, 253, 0.2) !important;
+    }
+
+    /* Адаптація під мобільні екрани */
+    @media (max-width: 991px) {
+        .card-body {
+            padding: 3rem 1.5rem !important;
+        }
+
+        .bg-primary {
+            display: none;
+            /* Ховаємо ліву панель на мобільних */
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10 col-xl-9">
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+                <div class="bg-primary bg-gradient" style="height: 150px;"></div>
+
+                <div class="card-body p-4 pt-0">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4"
+                        style="margin-top: -60px;">
+                        <div
+                            class="d-flex flex-column flex-md-row align-items-center align-items-md-end text-center text-md-start">
+                            <div class="position-relative">
+                                <img src="{{ user_info.profile.avatar.url }}" alt="Аватар"
+                                    class="rounded-circle border border-4 border-white shadow"
+                                    style="width: 140px; height: 140px; object-fit: cover;">
+                            </div>
+
+                            <div class="ms-md-4 mt-3 mt-md-0 pb-2">
+                                <h2 class="fw-bold mb-0 text-dark">{{ user_info.username }}</h2>
+                                <p class="text-muted mb-0">@{{ user_info.username|lower }}</p>
+                            </div>
+                        </div>
+
+                        <div class="pb-2 mt-3 mt-md-0 d-flex gap-2">
+                            {% if user.is_authenticated %}
+                            {% if user != user_info %}
+                            {% if user_info in user.following.all %}
+                            <a href="{% url 'unsubscribe' user_info.pk %}"
+                                class="btn btn-outline-danger rounded-pill px-4 fw-bold">Відписатися</a>
+                            {% else %}
+                            <a href="{% url 'subscribe' user_info.pk %}"
+                                class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">Підписатися</a>
+                            {% endif %}
+                            <a href="{% url 'message_create' user_info.pk %}"
+                                class="btn btn-light border rounded-circle shadow-sm"
+                                title="Надіслати повідомлення">✉️</a>
+                            {% else %}
+                            <a href="{% url 'change_profile' user.profile.pk %}"
+                                class="btn btn-light border rounded-pill px-4 fw-bold">Редагувати профіль</a>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row g-4 px-2">
+                        <div class="col-md-7">
+                            <h5 class="fw-bold mb-3">Про себе</h5>
+                            <p class="text-secondary fs-5" style="line-height: 1.5;">
+                                {% if user_info.profile.bio %}
+                                {{ user_info.profile.bio|linebreaksbr }}
+                                {% else %}
+                                Цей користувач ще не додав біографію.
+                                {% endif %}
+                            </p>
+
+                            <div class="d-flex gap-4 mt-4 border-top pt-3">
+                                <div class="text-center">
+                                    <h5 class="fw-bold mb-0">{{ user_info.followers_count }}</h5>
+                                    <small class="text-muted">Підписники</small>
+                                </div>
+                                <div class="text-center border-start ps-4">
+                                    <h5 class="fw-bold mb-0">{{ user_info.following_count }}</h5>
+                                    <small class="text-muted">Підписки</small>
+                                </div>
+                                <div class="text-center border-start ps-4">
+                                    <h5 class="fw-bold mb-0">?</h5> <small class="text-muted">Пости</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="bg-light rounded-4 p-3 border border-dashed">
+                                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Інформація</h6>
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="d-flex align-items-center small">
+                                        <span class="me-3 opacity-75">📧</span>
+                                        <span class="text-dark">{{ user_info.email }}</span>
+                                    </div>
+                                    {% if user_info.birthday %}
+                                    <div class="d-flex align-items-center small">
+                                        <span class="me-3 opacity-75">🎂</span>
+                                        <span class="text-dark">{{ user_info.birthday }} ({{ user_info.age }}
+                                            років)</span>
+                                    </div>
+                                    {% endif %}
+                                    <div class="d-flex align-items-center small">
+                                        <span class="me-3 opacity-75">📅</span>
+                                        <span class="text-dark">Приєднався: {{ user_info.date_joined|date:"M Y"
+                                            }}</span>
+                                    </div>
+                                    <a href="{% url 'posts_list_user' user_info.pk %}"
+                                        class="btn btn-outline-primary btn-sm rounded-pill mt-2 fw-bold">
+                                        Переглянути всі пости
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h5 class="fw-bold mb-0">👥 Підписники ({{ user_info.followers_count }})</h5>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                {% for follower in followers %}
+                                <a href="{% url 'user_detail' follower.pk %}" class="text-decoration-none"
+                                    title="{{ follower.username }}">
+                                    <img src="{{ follower.profile.avatar.url }}"
+                                        class="rounded-circle border border-2 border-white shadow-sm hover-scale"
+                                        width="45" height="45" style="object-fit: cover;">
+                                </a>
+                                {% empty %}
+                                <p class="text-muted small">Ще немає підписників.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h5 class="fw-bold mb-0">🔔 Підписки ({{ user_info.following_count }})</h5>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                {% for follow in following %}
+                                <a href="{% url 'user_detail' follow.pk %}" class="text-decoration-none"
+                                    title="{{ follow.username }}">
+                                    <img src="{{ follow.profile.avatar.url }}"
+                                        class="rounded-circle border border-2 border-white shadow-sm hover-scale"
+                                        width="45" height="45" style="object-fit: cover;">
+                                </a>
+                                {% empty %}
+                                <p class="text-muted small">Ще немає підписок.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-scale {
+        transition: transform 0.2s ease;
+    }
+
+    .hover-scale:hover {
+        transform: scale(1.15);
+        z-index: 5;
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+    }
+</style>
+{% endblock %}

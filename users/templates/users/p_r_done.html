@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-9 col-xl-8">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="row g-0">
+
+                    <div
+                        class="col-lg-5 bg-success d-none d-lg-flex align-items-center justify-content-center text-white p-5">
+                        <div class="text-center">
+                            <div class="display-1 mb-3">📩</div>
+                            <h2 class="fw-bold">Перевірте пошту</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7 bg-white">
+                        <div class="card-body p-4 p-md-5 text-center text-lg-start">
+                            <div class="mb-4">
+                                <h2 class="fw-bold text-dark mb-3">Лист відправлено!</h2>
+                                <div class="bg-light p-4 rounded-4 border-start border-success border-4">
+                                    <p class="fs-5 mb-0 text-secondary">
+                                        На вашу електронну пошту відправлено інструкції щодо відновлення паролю.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-4">
+                                Якщо ви не отримали листа протягом декількох хвилин, перевірте папку
+                                <strong>"Спам"</strong>.
+                            </p>
+
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'login' %}"
+                                    class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3 transition-all">
+                                    Повернутися до входу
+                                </a>
+                                <a href="{% url 'posts_list' %}"
+                                    class="btn btn-link text-decoration-none text-muted fw-bold">
+                                    На головну сторінку
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <p class="text-muted small">&copy; 2026 Mini Twitter. Ми дбаємо про вашу безпеку. 🛡️</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(13, 110, 253, 0.2) !important;
+    }
+
+    /* Адаптація для мобільних пристроїв */
+    @media (max-width: 991px) {
+        .card-body {
+            padding: 3rem 2rem !important;
+        }
+
+        .bg-success {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}

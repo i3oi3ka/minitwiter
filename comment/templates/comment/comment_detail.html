@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+
+            <div class="mb-3">
+                <a href="{% url 'post_detail' comment.post.pk %}" class="text-decoration-none text-muted fw-bold">
+                    &larr; До поста: {{ comment.post.title|truncatechars:30 }}
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-bottom p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
+                                style="width: 48px; height: 48px;">
+                                {{ comment.user.username|make_list|first|upper }}
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">{{ comment.user.username }}</h6>
+                                <small class="text-muted">{{ comment.created_at|date:"d M Y, H:i" }}</small>
+                            </div>
+                        </div>
+
+                        {% if user == comment.user %}
+                        <div class="dropdown">
+                            <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                                ⚙️
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                <li><a class="dropdown-item" href="{% url 'comment_update' comment.pk %}">✏️
+                                        Редагувати</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-danger"
+                                        href="{% url 'comment_delete' comment.pk %}">🗑️ Видалити</a></li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="comment-text fs-5 text-dark mb-4" style="line-height: 1.6; white-space: pre-wrap;">
+                        {{ comment.content|linebreaksbr }}
+                    </div>
+
+                    <div class="p-3 bg-light rounded-3 mb-4">
+                        <small class="text-muted d-block mb-1 text-uppercase fw-bold"
+                            style="font-size: 0.7rem;">Стосовно поста:</small>
+                        <a href="{% url 'post_detail' comment.post.pk %}"
+                            class="text-primary fw-bold text-decoration-none">
+                            "{{ comment.post.title }}"
+                        </a>
+                    </div>
+
+                    <div class="d-flex justify-content-center border-top pt-4">
+                        <a href="{% url 'post_detail' comment.post.pk %}"
+                            class="btn btn-outline-primary rounded-pill px-5 fw-bold">
+                            Повернутися до всіх коментарів
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Плавний перехід для посилань */
+    .transition-hover:hover {
+        opacity: 0.8;
+        transition: 0.2s;
+    }
+</style>
+{% endblock %}

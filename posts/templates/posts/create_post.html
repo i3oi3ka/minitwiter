@@ -1,0 +1,91 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+          <h3 class="fw-bold mb-0">✍️ Створити новий пост</h3>
+        </div>
+
+        <div class="card-body p-4">
+          <form
+            method="post"
+            enctype="multipart/form-data"
+            class="django-styled-form"
+          >
+            {% csrf_token %} {{ form.as_p }}
+
+            <div class="d-flex justify-content-end mt-4 pt-2 border-top">
+              <a
+                href="{% url 'posts_list' %}"
+                class="btn btn-light me-2 rounded-pill fw-bold px-4"
+              >
+                Скасувати
+              </a>
+              <button
+                type="submit"
+                class="btn btn-primary rounded-pill fw-bold px-4"
+              >
+                Опублікувати
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Стилізуємо ярлики (labels) */
+  .django-styled-form label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #495057;
+  }
+
+  /* Стилізуємо інпути та текстові поля */
+  .django-styled-form input[type="text"],
+  .django-styled-form input[type="password"],
+  .django-styled-form input[type="email"],
+  .django-styled-form textarea,
+  .django-styled-form select {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #f8f9fa; /* Світло-сірий фон, як у Twitter */
+    border: 1px solid #ced4da;
+    border-radius: 0.75rem; /* Округлі кути */
+    transition:
+      border-color 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+    margin-bottom: 1rem;
+  }
+
+  /* Ефект при кліку (фокус) на поле */
+  .django-styled-form input[type="text"]:focus,
+  .django-styled-form textarea:focus {
+    background-color: #fff;
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+
+  /* Стилізуємо поле завантаження файлу (картинки) */
+  .django-styled-form input[type="file"] {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.375rem;
+  }
+
+  /* Відступи між параграфами форми */
+  .django-styled-form p {
+    margin-bottom: 0;
+  }
+</style>
+{% endblock %}

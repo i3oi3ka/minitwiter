@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h3 class="fw-bold mb-1 text-center">⚙️ Дані акаунту</h3>
+                    <p class="text-muted small text-center">Оновіть свою основну інформацію для входу</p>
+                </div>
+
+                <div class="card-body p-4 pt-2">
+                    <form method="post" class="styled-user-form" novalidate>
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label fw-bold text-dark small">
+                                {{ field.label }}
+                            </label>
+
+                            <div class="input-wrapper">
+                                {{ field }}
+                            </div>
+
+                            {% if field.errors %}
+                            <div class="alert alert-danger py-2 px-3 mt-2 rounded-3 small border-0">
+                                {{ field.errors|striptags }}
+                            </div>
+                            {% endif %}
+
+                            {% if field.help_text %}
+                            <div class="form-text small px-1">{{ field.help_text|safe }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-flex flex-column gap-2 mt-4 pt-3 border-top">
+                            <button type="submit" class="btn btn-primary rounded-pill fw-bold py-2 shadow-sm">
+                                Зберегти зміни
+                            </button>
+                            <a href="{% url 'user_detail' user.pk %}" class="btn btn-light rounded-pill fw-bold py-2">
+                                Скасувати
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="{% url 'change_profile' user.profile.pk %}" class="text-decoration-none small text-muted">
+                    Змінити фото або Біографію? <span class="text-primary fw-bold">Тут &rarr;</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Стилізуємо всі інпути, які Django генерує всередині форми */
+    .styled-user-form input {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.75rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .styled-user-form input:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    }
+
+    /* Стилізація помилок */
+    .alert-danger {
+        background-color: #fff5f5;
+        color: #dc3545;
+    }
+
+    /* Анімація кнопки */
+    .btn-primary:active {
+        transform: scale(0.98);
+    }
+</style>
+{% endblock %}

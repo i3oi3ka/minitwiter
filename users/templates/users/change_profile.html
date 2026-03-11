@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 pt-4 pb-0 px-4 text-center">
+                    <h3 class="fw-bold mb-1">🖼️ Налаштування профілю</h3>
+                    <p class="text-muted small">Змініть свій аватар та розкажіть про себе</p>
+                </div>
+
+                <div class="card-body p-4 pt-2">
+                    <form method="post" enctype="multipart/form-data" class="styled-profile-form" novalidate>
+                        {% csrf_token %}
+
+                        <div class="text-center mb-4">
+                            {% if user.profile.avatar %}
+                            <div class="position-relative d-inline-block">
+                                <img src="{{ user.profile.avatar.url }}" alt="Поточний аватар"
+                                    class="rounded-circle border border-3 border-primary p-1 shadow-sm"
+                                    style="width: 120px; height: 120px; object-fit: cover;">
+                                <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-primary p-2">
+                                    <small>Поточний</small>
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-fields px-lg-4">
+                            {{ form.as_p }}
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-2 mt-4 pt-3 border-top">
+                            <a href="{% url 'user_detail' user.pk %}" class="btn btn-light rounded-pill fw-bold px-4">
+                                Скасувати
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill fw-bold px-5 shadow-sm">
+                                Зберегти зміни
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <small class="text-muted">Хочете змінити пароль або пошту?
+                    <a href="{% url 'change_user_info' user.pk %}"
+                        class="text-primary text-decoration-none fw-bold">Перейдіть сюди &rarr;</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Стилізація полів форми */
+    .styled-profile-form p label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #495057;
+        font-size: 0.95rem;
+    }
+
+    /* Поле вибору файлу */
+    .styled-profile-form input[type="file"] {
+        display: block;
+        width: 100%;
+        padding: 0.5rem;
+        background-color: #f8f9fa;
+        border: 1px dashed #dee2e6;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Текстове поле (Bio) */
+    .styled-profile-form textarea {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 1rem;
+        margin-bottom: 1.25rem;
+        min-height: 100px;
+        transition: all 0.2s;
+    }
+
+    .styled-profile-form textarea:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    }
+
+    .styled-profile-form p {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Стиль посилань у формі (наприклад, "Clear" або шлях до файлу) */
+    .styled-profile-form a {
+        color: #6c757d;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+
+    .styled-profile-form a:hover {
+        color: #0d6efd;
+    }
+</style>
+{% endblock %}

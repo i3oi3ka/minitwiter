@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-9 col-xl-8">
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger rounded-4 shadow-sm border-0 mb-4 animate__animated animate__fadeIn">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="row g-0">
+
+                    <div
+                        class="col-lg-5 bg-primary d-none d-lg-flex align-items-center justify-content-center text-white p-5">
+                        <div class="text-center">
+                            <div class="display-1 fw-bold mb-3">MT</div>
+                            <h2 class="fw-bold">Mini Twitter</h2>
+                            <p class="opacity-75">Дізнайтеся, що відбувається у світі прямо зараз.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7 bg-white">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="mb-5">
+                                <h2 class="fw-bold text-dark">Вітаємо знову!</h2>
+                                <p class="text-muted">Будь ласка, введіть ваші дані для входу.</p>
+                            </div>
+
+                            <form method="post" class="styled-login-form">
+                                {% csrf_token %}
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-muted ms-1 text-uppercase">Логін</label>
+                                    <div class="input-group custom-input-group">
+                                        <span class="input-group-text border-0 bg-light px-3">👤</span>
+                                        {{ form.username }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label
+                                        class="form-label fw-bold small text-muted ms-1 text-uppercase">Пароль</label>
+                                    <div class="input-group custom-input-group">
+                                        <span class="input-group-text border-0 bg-light px-3">🔒</span>
+                                        {{ form.password }}
+                                    </div>
+                                </div>
+
+                                <div class="text-end mb-4 px-1">
+                                    <a href="{% url 'password_reset' %}"
+                                        class="text-decoration-none small text-primary fw-bold">Забули пароль?</a>
+                                </div>
+
+                                <div class="d-grid mb-4">
+                                    <button type="submit"
+                                        class="btn btn-primary btn-lg rounded-pill fw-bold shadow py-3 transition-all">
+                                        Увійти в акаунт
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="text-center mt-4">
+                                <p class="text-muted">Ще не маєте акаунту?
+                                    <a href="{% url 'register' %}"
+                                        class="text-primary fw-bold text-decoration-none border-bottom border-2 border-primary pb-1">Зареєструватися</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 mb-5">
+                <p class="text-muted small">&copy; 2026 Mini Twitter. Made with ❤️</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Стилізація інпутів Django */
+    .styled-login-form input {
+        display: block;
+        width: 100%;
+        padding: 0.9rem 1.2rem;
+        font-size: 1rem;
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 0 50px 50px 0 !important;
+        transition: all 0.3s ease;
+    }
+
+    .styled-login-form input:focus {
+        background-color: #fff;
+        outline: 0;
+        box-shadow: inset 0 0 0 2px #0d6efd;
+    }
+
+    .custom-input-group .input-group-text {
+        border-radius: 50px 0 0 50px !important;
+        font-size: 1.1rem;
+    }
+
+    /* Анімація та ефекти */
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(13, 110, 253, 0.2) !important;
+    }
+
+    /* Адаптація для мобільних */
+    @media (max-width: 991px) {
+        .card-body {
+            padding: 2rem !important;
+        }
+    }
+</style>
+{% endblock %}

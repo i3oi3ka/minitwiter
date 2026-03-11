@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+
+                <div class="card-header bg-danger text-white border-0 py-3 px-4">
+                    <h4 class="fw-bold mb-0 text-center">🗑️ Видалити повідомлення?</h4>
+                </div>
+
+                <div class="card-body p-4 text-center">
+                    {% if user == message.sender or user == object.sender %}
+                    <p class="fs-5 mb-4">Ви впевнені, що хочете видалити це повідомлення? Цю дію неможливо буде
+                        скасувати.</p>
+
+                    <div class="p-3 bg-light border rounded-3 mb-4 text-start small text-muted italic">
+                        <strong>Тема:</strong> {{ object.title }}<br>
+                        <span class="text-truncate d-block mt-1">
+                            {{ object.text|truncatechars:100 }}
+                        </span>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'message_list' 'inbox' %}"
+                                class="btn btn-light border rounded-pill fw-bold px-4">
+                                Скасувати
+                            </a>
+                            <button type="submit" class="btn btn-danger rounded-pill fw-bold px-4">
+                                Так, видалити
+                            </button>
+                        </div>
+                    </form>
+
+                    {% else %}
+                    <div class="py-4">
+                        <span class="display-1 d-block mb-3">🔒</span>
+                        <h4 class="fw-bold text-danger mb-3">Доступ обмежено</h4>
+                        <p class="text-muted mb-4">Вибачте, ви не можете видалити це повідомлення, оскільки ви не є його
+                            відправником.</p>
+                        <a href="{% url 'message_list' 'inbox' %}" class="btn btn-primary rounded-pill fw-bold px-4">
+                            До вхідних
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

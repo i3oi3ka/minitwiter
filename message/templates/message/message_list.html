@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+        <h1 class="fw-bold">Повідомлення</h1>
+    </div>
+
+    <ul class="nav nav-tabs border-0 mb-4 bg-white rounded-3 shadow-sm p-1">
+        <li class="nav-item flex-fill text-center">
+            <a class="nav-link border-0 rounded-3 {% if folder == 'inbox' %}active fw-bold text-primary bg-light{% else %}text-muted{% endif %}"
+                href="{% url 'message_list' 'inbox' %}">
+                📥 Вхідні
+            </a>
+        </li>
+        <li class="nav-item flex-fill text-center">
+            <a class="nav-link border-0 rounded-3 {% if folder == 'sent' %}active fw-bold text-primary bg-light{% else %}text-muted{% endif %}"
+                href="{% url 'message_list' 'sent' %}">
+                📤 Надіслані
+            </a>
+        </li>
+    </ul>
+
+    <div class="list-group shadow-sm rounded-4 overflow-hidden border-0">
+        {% for message in messages %}
+        <div
+            class="list-group-item list-group-item-action border-0 border-bottom p-3 position-relative {% if message.unread %}bg-unread{% endif %}">
+            <div class="d-flex justify-content-between align-items-start">
+
+                <div class="d-flex align-items-center">
+                    <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
+                        style="width: 45px; height: 45px;">
+                        {% if folder == 'inbox' %}
+                        {{ message.sender.username|make_list|first|upper }}
+                        {% else %}
+                        {{ message.receiver.username|make_list|first|upper }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">
+                            <a href="{% url 'message_detail' message.pk %}"
+                                class="text-dark text-decoration-none stretched-link">
+                                {{ message.title }}
+                            </a>
+                        </h6>
+                        <small class="text-muted">
+                            {% if folder == 'inbox' %}
+                            Від: <strong>{{ message.sender }}</strong>
+                            {% else %}
+                            Кому: <strong>{{ message.receiver }}</strong>
+                            {% endif %}
+                            • {{ message.created_at|date:"d M, H:i" }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-1" style="z-index: 5; position: relative;">
+                    {% if folder == 'inbox' %}
+                    <a href="{% url 'message_create' message.sender.pk %}"
+                        class="btn btn-sm btn-outline-primary rounded-pill px-3">Відповісти</a>
+                    {% endif %}
+
+                    {% if user == message.sender %}
+                    <a href="{% url 'message_update' message.pk %}" class="btn btn-sm btn-light rounded-circle"
+                        title="Редагувати">✏️</a>
+                    <a href="{% url 'message_delete' message.pk %}"
+                        class="btn btn-sm btn-light text-danger rounded-circle" title="Видалити">🗑️</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mt-2 ps-5 ms-2 text-secondary text-truncate" style="max-width: 80%;">
+                {{ message.text }}
+            </div>
+
+            {% if message.unread %}
+            <span
+                class="position-absolute top-50 start-0 translate-middle p-1 bg-primary border border-light rounded-circle ms-2"></span>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="list-group-item text-center py-5 border-0">
+            <div class="display-1 text-muted mb-3 opacity-25">✉️</div>
+            <h5 class="text-muted">Повідомлень поки що немає</h5>
+            <p class="small text-muted">Коли ви отримаєте або надішлете листа, він з'явиться тут.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+    /* Стиль для непрочитаних повідомлень */
+    .bg-unread {
+        background-color: #f0f7ff !important;
+        border-left: 4px solid #0d6efd !important;
+    }
+
+    .list-group-item-action:hover {
+        background-color: #f8f9fa;
+        transition: background-color 0.2s;
+    }
+
+    /* Щоб посилання розтягувалося на всю область картки, але не заважало кнопкам */
+    .stretched-link::after {
+        z-index: 1;
+    }
+</style>
+{% endblock %}

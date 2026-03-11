@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="mb-3">
+                <a href="javascript:history.back()" class="text-decoration-none text-muted fw-bold">
+                    &larr; Скасувати та повернутися
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h3 class="fw-bold mb-0">💬 Новий коментар</h3>
+                    <p class="text-muted small">Поділіться своїми думками з іншими</p>
+                </div>
+
+                <div class="card-body p-4 pt-0">
+                    <form method="post" class="styled-comment-form">
+                        {% csrf_token %}
+
+                        <div class="form-group mb-4">
+                            <label class="fw-bold mb-2 text-dark d-none border-0">{{ form.content.label }}</label>
+
+                            {{ form.content }}
+
+                            {% if form.content.errors %}
+                            <div class="text-danger small mt-2">
+                                {{ form.content.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                            <a href="javascript:history.back()" class="btn btn-light rounded-pill fw-bold px-4">
+                                Скасувати
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4 shadow-sm">
+                                Опублікувати
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-primary bg-opacity-10 rounded-4 border-start border-primary border-4">
+                <small class="text-primary fw-bold d-block mb-1">Порада:</small>
+                <small class="text-dark">Будьте ввічливими та поважайте інших учасників обговорення. Гарні коментарі
+                    збирають більше лайків! 😉</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Робимо стандартну textarea від Django красивою */
+    .styled-comment-form textarea {
+        display: block;
+        width: 100%;
+        min-height: 150px;
+        padding: 1rem;
+        font-size: 1.1rem;
+        color: #212529;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 1rem;
+        transition: all 0.2s ease-in-out;
+        resize: vertical;
+    }
+
+    .styled-comment-form textarea:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    }
+
+    /* Стиль для кнопки відправки */
+    .btn-primary {
+        transition: transform 0.1s ease;
+    }
+
+    .btn-primary:active {
+        transform: scale(0.95);
+    }
+</style>
+{% endblock %}

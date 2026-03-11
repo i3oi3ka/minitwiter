@@ -1,0 +1,225 @@
+{% load static %} {% load custom_filters %} <!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net code.jquery.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; img-src 'self' data: localhost;"
+    />
+
+    <title>Mini Twitter</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background-color: #f5f8fa; /* Світлий колір фону, як у соцмережах */
+        color: #333;
+      }
+
+      .navbar {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar-card {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+
+      .profile-avatar {
+        width: 100px;
+        height: 100px;
+        object-fit: cover; /* Щоб фото не розтягувалося, а обрізалося рівно по колу */
+        border: 3px solid #0d6efd;
+        padding: 2px;
+      }
+
+      /* Стилі для меню в сайдбарі */
+      .sidebar .nav-link {
+        color: #495057;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        transition: all 0.2s;
+        font-weight: 500;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+        color: #0d6efd;
+        transform: translateX(5px); /* Легкий ефект зсуву при наведенні */
+      }
+
+      .main-content {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        min-height: 70vh;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold fs-3" href="{% url 'posts_list' %}"
+          >Mini Twitter</a
+        >
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{% url 'posts_list' %}"
+                >Усі пости</a
+              >
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{% url 'users_list' %}"
+                >Користувачі</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+
+          <div class="d-flex align-items-center">
+            {% if user.is_authenticated %}
+            <a
+              href="{% url 'create_post' %}"
+              class="btn btn-light btn-sm fw-bold me-2 text-primary"
+              >Створити пост</a
+            >
+            <a
+              href="{% url 'consult' %}"
+              class="btn btn-info btn-sm text-white fw-bold me-3"
+              >Підтримка</a
+            >
+
+            <span class="text-white me-3 d-flex align-items-center">
+              <span class="me-2">Вітаю,</span>
+              <a
+                href="{% url 'user_detail' user.pk %}"
+                class="text-white fw-bold text-decoration-none border-bottom border-light"
+                >{{ user.username }}</a
+              >
+            </span>
+            <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm"
+              >Вийти</a
+            >
+            {% else %}
+            <span class="text-white me-3">Вітаю, гостю!</span>
+            <a
+              href="{% url 'login' %}"
+              class="btn btn-outline-light btn-sm me-2"
+              >Увійти</a
+            >
+            <a
+              href="{% url 'register' %}"
+              class="btn btn-light btn-sm text-primary fw-bold"
+              >Зареєструватися</a
+            >
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-4">
+      <div class="row">
+        <aside class="col-md-4 col-lg-3 mb-4">
+          {% if user.is_authenticated %}
+          <div class="sidebar-card sidebar position-sticky" style="top: 90px">
+            <div class="text-center mb-4">
+              {% if user.profile.avatar %}
+              <img
+                src="{{ user.profile.avatar.url }}"
+                alt="Аватар"
+                class="profile-avatar rounded-circle mb-2"
+              />
+              {% else %}
+              <div
+                class="profile-avatar rounded-circle mb-2 mx-auto bg-secondary d-flex justify-content-center align-items-center text-white fs-1"
+              >
+                {{ user.username|make_list|first|upper }}
+              </div>
+              {% endif %}
+              <h5 class="fw-bold mb-0">@{{ user.username }}</h5>
+            </div>
+
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'posts_list' 'my' %}"
+                  >✏️ Мої пости</a
+                >
+              </li>
+
+              <li class="nav-item">
+                {% with count=user|unread_message_count %}
+                <a
+                  class="nav-link d-flex justify-content-between align-items-center"
+                  href="{% url 'message_list' 'inbox' %}"
+                >
+                  <span>✉️ Повідомлення</span>
+                  {% if count %}
+                  <span class="badge bg-danger rounded-pill">{{ count }}</span>
+                  {% endif %}
+                </a>
+                {% endwith %}
+              </li>
+
+              <hr class="my-2" />
+
+              <li class="nav-item">
+                <a
+                  class="nav-link text-muted"
+                  style="font-size: 0.9rem"
+                  href="{% url 'change_user_info' user.pk %}"
+                  >⚙️ Налаштування акаунту</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-muted"
+                  style="font-size: 0.9rem"
+                  href="{% url 'change_profile' user.profile.pk %}"
+                  >🖼️ Змінити аватар/біо</a
+                >
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+        </aside>
+
+        <main class="col-md-8 col-lg-9">
+          <div class="main-content">{% block content %} {% endblock %}</div>
+        </main>
+      </div>
+    </div>
+
+    <footer class="text-muted text-center py-4 mt-5">
+      <div class="container">
+        <p class="mb-0">
+          &copy; {% now "Y" %} Mini Twitter. Всі права захищено.
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-primary text-white rounded-top-4 p-3">
+      <h4 class="mb-0">💬 Чат з Консультантом</h4>
+    </div>
+
+    <div class="card-body p-4">
+      <div
+        id="chat-response"
+        class="bg-light p-3 rounded-3 mb-3 text-dark"
+        style="min-height: 100px"
+      >
+        <em>Привіт! Я консультант Mini Twitter. Чим можу допомогти?</em>
+      </div>
+
+      <div id="loading-spinner" class="text-center mb-3" style="display: none">
+        <div
+          class="spinner-border text-primary spinner-border-sm"
+          role="status"
+        >
+          <span class="visually-hidden">Завантаження...</span>
+        </div>
+        <span class="ms-2 text-muted">Консультант друкує...</span>
+      </div>
+
+      <form id="chat-form">
+        {% csrf_token %}
+        <div class="input-group">
+          <input
+            type="text"
+            id="user-input"
+            placeholder="Введіть ваше питання..."
+            class="form-control"
+            required
+          />
+          <button type="submit" class="btn btn-primary px-4">Надіслати</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+  // Чекаємо, поки завантажиться весь HTML і підключиться jQuery з base.html
+  document.addEventListener("DOMContentLoaded", function () {
+    $("#chat-form").submit(function (e) {
+      e.preventDefault();
+
+      let userInput = $("#user-input").val();
+      let csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+      // Відразу показуємо питання користувача
+      $("#chat-response").html(`<strong>Ви:</strong> ${userInput}<br><br>`);
+      $("#loading-spinner").show();
+
+      $.ajax({
+        url: "/chat_with_gemini/",
+        type: "POST",
+        contentType: "application/json",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+        data: JSON.stringify({ user_input: userInput }),
+        success: function (data) {
+          $("#loading-spinner").hide();
+
+          if (data.response) {
+            // Використовуємо marked.parse() щоб гарно відрендерити текст від Gemini
+            let formattedResponse = marked.parse(data.response);
+            $("#chat-response").append(
+              `<strong>Консультант:</strong><div class="mt-2">${formattedResponse}</div>`,
+            );
+            $("#user-input").val(""); // Очищаємо поле
+          }
+        },
+        error: function (xhr) {
+          $("#loading-spinner").hide();
+
+          let errorMessage = "Сталася помилка з'єднання з сервером.";
+          if (xhr.responseJSON && xhr.responseJSON.error) {
+            errorMessage = xhr.responseJSON.error;
+          }
+
+          $("#chat-response").append(
+            `<div class="text-danger mt-2"><strong>Помилка:</strong> ${errorMessage}</div>`,
+          );
+        },
+      });
+    });
+  });
+</script>
+{% endblock %}
