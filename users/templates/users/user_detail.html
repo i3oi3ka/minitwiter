@@ -88,11 +88,13 @@
                                             років)</span>
                                     </div>
                                     {% endif %}
+                                    {% if user_info.phone_number %}
                                     <div class="d-flex align-items-center small">
-                                        <span class="me-3 opacity-75">📅</span>
-                                        <span class="text-dark">Приєднався: {{ user_info.date_joined|date:"M Y"
-                                            }}</span>
+                                        <span class="me-3 opacity-75">📱</span>
+                                        <span class="text-dark">{{ user_info.phone_number }} ({{ user_info.age }}
+                                            років)</span>
                                     </div>
+                                    {% endif %}
                                     <a href="{% url 'posts_list_user' user_info.pk %}"
                                         class="btn btn-outline-primary btn-sm rounded-pill mt-2 fw-bold">
                                         Переглянути всі пости

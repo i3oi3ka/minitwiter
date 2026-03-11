@@ -98,8 +98,9 @@
                             class="text-dark fw-bold text-decoration-none fs-6">
                             {{ comment.user.username }}
                         </a>
-                        <span class="text-muted ms-2" style="font-size: 0.85rem;">{{ comment.created_at|date:"d M, H:i"
-                            }}</span>
+                        <span class="text-muted ms-2" style="font-size: 0.85rem;">
+                            {{ comment.created_at | date:"d M Y, H:i"}}
+                        </span>
                     </div>
                 </div>
 

@@ -2,7 +2,7 @@ from axes.backends import AxesBackend
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.utils.datetime_safe import date
+from datetime import date
 
 from .models import User, UserProfile
 

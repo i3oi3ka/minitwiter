@@ -139,6 +139,7 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(post__id=self.kwargs['pk']).select_related('user').order_by(
             '-created_at')
+        print(context['comments'][0].created_at)
         return context
 
 
