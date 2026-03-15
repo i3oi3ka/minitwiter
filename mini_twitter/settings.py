@@ -30,7 +30,8 @@ SECRET_KEY = KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = ["*"]
+
 
 # Application definition
 
@@ -43,7 +44,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # my_app
     "axes",
-    "debug_toolbar",
     "users",
     "posts",
     "message",
@@ -58,11 +58,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "axes.middleware.AxesMiddleware",
 ]
 
-INTERNAL_IPS = ["127.0.0.1", "172.20.0.1"]
+import socket
+
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.0.1"]
+
 
 AUTH_USER_MODEL = "users.User"
 ROOT_URLCONF = "mini_twitter.urls"
@@ -109,6 +112,16 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://minitwitterfp-env.eba-zzuuesmn.eu-central-1.elasticbeanstalk.com",
+    "https://minitwitterfp-env.eba-zzuuesmn.eu-central-1.elasticbeanstalk.com",
+]
+
+# Налаштування для роботи через проксі-сервер AWS
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -143,9 +156,34 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Додаємо логіку для S3 (якщо змінні прописані в Beanstalk)
+if os.getenv("AWS_STORAGE_BUCKET_NAME"):
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "eu-central-1")
+
+    # Це змусить Django використовувати S3 замість локальної папки media
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
+    # Формуємо URL до картинок через S3
+    AWS_S3_CUSTOM_DOMAIN = (
+        f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+    )
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -163,5 +201,6 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 AXES_FAILURE_LIMIT = 3  # Кількість невдалих спроб, після якої відбувається блокування
 AXES_COOLOFF_TIME = 0.02  # Час у годинах, протягом якого триває блокування
 
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SECURE = False
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None

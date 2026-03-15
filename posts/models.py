@@ -9,11 +9,13 @@ class Post(models.Model):
     title = models.CharField(max_length=256)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    like = models.ManyToManyField(User, blank=True, related_name='liked_post')
-    image = ResizedImageField(size=[600, 400], upload_to='posts/image', blank=True, null=True)
+    like = models.ManyToManyField(User, blank=True, related_name="liked_post")
+    image = ResizedImageField(
+        size=[1920, 1080], quality=90, upload_to="posts/image", blank=True, null=True
+    )
 
     def __str__(self):
-        return f'Post: {self.title}, created: {self.created_at}'
+        return f"Post: {self.title}, created: {self.created_at}"
 
     def get_absolute_url(self):
-        return reverse('post_detail', kwargs={'pk': self.pk})
+        return reverse("post_detail", kwargs={"pk": self.pk})

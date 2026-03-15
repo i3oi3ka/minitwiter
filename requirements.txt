@@ -8,11 +8,10 @@ tzdata==2025.1
 psycopg2-binary==2.9.10
 
 # Image Processing (Pillow 11+ is highly recommended for 3.13)
-pillow==11.0.0
+Pillow>=11.0.0
 django-resized==1.0.2
 
 # AI & API (Updated OpenAI and Pydantic for 3.13 stability)
-openai==1.63.2
 pydantic==2.10.6
 pydantic_core==2.27.2
 httpx==0.28.1
@@ -45,3 +44,9 @@ jiter==0.8.2
 pluggy==1.5.0
 tomli==2.2.1 ; python_version < "3.11"
 exceptiongroup==1.2.2 ; python_version < "3.11"
+
+# AWS Storage Support
+boto3==1.36.23
+django-storages==1.14.5
+gunicorn==23.0.0
+django-csp==3.7
